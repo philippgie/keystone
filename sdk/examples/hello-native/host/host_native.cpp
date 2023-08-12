@@ -19,18 +19,39 @@ print_string_wrapper(void* buffer);
  ***/
 unsigned long
 print_string(char* str) {
-  return printf("Enclave said: \"%s\"\n", str);
+  //return printf("Enclave said: \"%s\"\n", str);
+printf("******************************************\n");
+
+  //return_ptr=0xffffffff40000000;
+  for (unsigned int i = 0; i < 1024*118; i+=64)
+  {
+    printf("\n%p: ", str+i);
+    for (unsigned int j = i; j < i+64 && j < 1024*118; j++)
+    {
+    printf("%c", ((char*)str)[j]);
+    }
+  }
+  printf("******************************************\n");
+
+
 }
 
 int
 main(int argc, char** argv) {
   Keystone::Enclave enclave;
   Keystone::Params params;
+  puts("Beginning main");
 
-  params.setFreeMemSize(1024 * 1024);
-  params.setUntrustedMem(DEFAULT_UNTRUSTED_PTR, 1024 * 1024);
+  params.setFreeMemSize(1024 * 128);
+  //params.setFreeMemSize(1024 * 96);
+  //params.setUntrustedMem(DEFAULT_UNTRUSTED_PTR, 1024 * 1024);
+  params.setUntrustedMem(0xffffffff00000000 - 1024 * 1024, 1024 * 1024);
+
+  puts("Set mem utm and fre");
 
   enclave.init(argv[1], argv[2], params);
+
+  puts("initialized enclave");
 
   enclave.registerOcallDispatch(incoming_call_dispatch);
 
@@ -41,6 +62,7 @@ main(int argc, char** argv) {
   edge_call_init_internals(
       (uintptr_t)enclave.getSharedBuffer(), enclave.getSharedBufferSize());
 
+  puts("About to run enclave");
   enclave.run();
 
   return 0;
@@ -69,10 +91,13 @@ print_string_wrapper(void* buffer) {
   uintptr_t data_section = edge_call_data_ptr();
   memcpy((void*)data_section, &ret_val, sizeof(unsigned long));
   if (edge_call_setup_ret(
-          edge_call, (void*)data_section, sizeof(unsigned long))) {
+          edge_call, (void*)72057593896660992, 0)) {
+          //edge_call, (void*)data_section, sizeof(unsigned long))) {
     edge_call->return_data.call_status = CALL_STATUS_BAD_PTR;
+    puts("edge_call_setup_ret BAD");
   } else {
     edge_call->return_data.call_status = CALL_STATUS_OK;
+    puts("edge_call_setup_ret OK");
   }
 
   /* This will now eventually return control to the enclave */

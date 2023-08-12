@@ -23,6 +23,7 @@ main() {
   }
 
   char nonce[2048];
+  // something happpening with retdata.size??
   if (retdata.size > 2048) retdata.size = 2048;
   copy_from_shared(nonce, retdata.offset, retdata.size);
 

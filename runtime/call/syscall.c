@@ -78,21 +78,31 @@ uintptr_t dispatch_edgecall_ocall( unsigned long call_id,
   /* We encode the call id, copy the argument data into the shared
    * region, calculate the offsets to the argument data, and then
    * dispatch the ocall to host */
+  printf("Shared buffer: %p\n", shared_buffer);
+  printf("Shared buffer -> call_id: %p\n", &edge_call->call_id);
 
   edge_call->call_id = call_id;
+  printf("Setcall_id\n");
   uintptr_t buffer_data_start = edge_call_data_ptr();
+  printf("Returned from edge_call_data_ptr\n");
 
+  // Better check args for any sort of overflow underflow
   if(data_len > (shared_buffer_size - (buffer_data_start - shared_buffer))){
     goto ocall_error;
   }
   //TODO safety check on source
   copy_from_user((void*)buffer_data_start, (void*)data, data_len);
+  printf("[dispatch_edgecall_syscall] data: %p\n", data);
 
   if(edge_call_setup_call(edge_call, (void*)buffer_data_start, data_len) != 0){
     goto ocall_error;
   }
 
+  printf("RT calling into sm\n");
+
   ret = sbi_stop_enclave(1);
+
+  printf("SM returning to tr\n");
 
   if (ret != 0) {
     goto ocall_error;
@@ -118,6 +128,22 @@ uintptr_t dispatch_edgecall_ocall( unsigned long call_id,
      value passed in the edge_call return data. We need to somehow
      validate these. The size in the edge_call return data is larger
      almost certainly.*/
+  printf("[dispatch_edgecall_syscall] return buffer: %p\n", return_buffer);
+  printf("[dispatch_edgecall_syscall] return ptr: %p\n", return_ptr);
+  printf("[dispatch_edgecall_syscall] return len: %zu\n", return_len);
+
+//  printf("******************************************\n");
+//  //return_ptr=0xffffffff40000000;
+//  for (unsigned int i = 0; i < return_len * 1; i+=64)
+//  {
+//    printf("\n%p: ", return_ptr+i);
+//    for (unsigned int j = i; j < i+64; j++)
+//    {
+//    printf("%c", ((char*)return_ptr)[j]);
+//    }
+//  }
+//  printf("******************************************\n");
+
   copy_to_user(return_buffer, (void*)return_ptr, return_len);
 
   return 0;

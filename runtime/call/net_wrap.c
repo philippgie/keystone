@@ -160,6 +160,7 @@ uintptr_t io_syscall_recvfrom(int sockfd, uintptr_t buf, size_t len, int flags,
 	size_t totalsize = sizeof(struct edge_syscall) + sizeof(sargs_SYS_recvfrom);
 	ret = dispatch_edgecall_syscall(edge_syscall, totalsize);
 
+  // INteresting, is retunr value set by system? Easy iago
 	if (ret > 0) {
 		copy_to_user((void *) buf, &args->buf, ret);
 	}

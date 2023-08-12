@@ -125,7 +125,10 @@ eyrie_boot(uintptr_t dummy, // $a0 contains the return value from the SBI
   kernel_offset = runtime_va_start - runtime_paddr;
 
   debug("UTM : 0x%lx-0x%lx (%u KB)", utm_vaddr, utm_vaddr+utm_size, utm_size/1024);
+  debug("USER(va) : 0x%lx", __va(user_paddr));
+  debug("DRAM(va) : 0x%lx-0x%lx (%u KB)", __va(dram_base), __va(dram_base)+dram_size, dram_size/1024);
   debug("DRAM: 0x%lx-0x%lx (%u KB)", dram_base, dram_base + dram_size, dram_size/1024);
+  debug("runtime: 0x%lx", runtime_va_start);
 #ifdef USE_FREEMEM
   freemem_va_start = __va(free_paddr);
   freemem_size = dram_base + dram_size - free_paddr;

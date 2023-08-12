@@ -48,6 +48,7 @@ __spa_get(bool zero)
   spa_free_pages.head = next;
   spa_free_pages.count--;
 
+  // check xflow
   assert(free_page > EYRIE_LOAD_START && free_page < (freemem_va_start + freemem_size));
 
   if (zero)

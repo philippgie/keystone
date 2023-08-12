@@ -403,6 +403,7 @@ elf_getMemoryBounds(
 
     sect_max = sect_min + elf_getProgramHeaderMemorySize(elfFile, i);
 
+// some under /overfow?
     if (sect_max > mem_max) {
       mem_max = sect_max;
     }

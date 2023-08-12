@@ -51,6 +51,7 @@ int keystone_mmap(struct file* filp, struct vm_area_struct *vma)
 
   utm = enclave->utm;
   epm = enclave->epm;
+  // Integer underflow? Look for the two subsequent conditions involvin vsize
   vsize = vma->vm_end - vma->vm_start;
 
   if(enclave->is_init){
@@ -59,6 +60,7 @@ int keystone_mmap(struct file* filp, struct vm_area_struct *vma)
     paddr = __pa(epm->root_page_table) + (vma->vm_pgoff << PAGE_SHIFT);
     remap_pfn_range(vma,
                     vma->vm_start,
+                    // AFAIK, only shift not rotaiton, does not seem to interesting
                     paddr >> PAGE_SHIFT,
                     vsize, vma->vm_page_prot);
   }
