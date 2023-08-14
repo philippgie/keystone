@@ -10,6 +10,10 @@ print_string(char* str);
 void
 print_string_wrapper(void* buffer);
 #define OCALL_PRINT_STRING 1
+#define OCALL_SCAN_STRING 2
+
+#define BUFSIZE 144
+//#define BUFSIZE 118
 
 /***
  * An example call that will be exposed to the enclave application as
@@ -20,18 +24,18 @@ print_string_wrapper(void* buffer);
 unsigned long
 print_string(char* str) {
   //return printf("Enclave said: \"%s\"\n", str);
-printf("******************************************\n");
+printf("\n******************************************\n");
 
   //return_ptr=0xffffffff40000000;
-  for (unsigned int i = 0; i < 1024*118; i+=64)
+  for (unsigned int i = 0; i < 1024*BUFSIZE; i+=64)
   {
     printf("\n%p: ", str+i);
-    for (unsigned int j = i; j < i+64 && j < 1024*118; j++)
+    for (unsigned int j = i; j < i+64 && j < 1024*BUFSIZE; j++)
     {
     printf("%c", ((char*)str)[j]);
     }
   }
-  printf("******************************************\n");
+  printf("\n******************************************\n");
 
 
 }
@@ -43,7 +47,7 @@ main(int argc, char** argv) {
   puts("Beginning main");
 
   params.setFreeMemSize(1024 * 128);
-  //params.setFreeMemSize(1024 * 96);
+  //params.setFreeMemSize(1024 * 128);
   //params.setUntrustedMem(DEFAULT_UNTRUSTED_PTR, 1024 * 1024);
   params.setUntrustedMem(0xffffffff00000000 - 1024 * 1024, 1024 * 1024);
 
@@ -58,6 +62,7 @@ main(int argc, char** argv) {
   /* We must specifically register functions we want to export to the
      enclave. */
   register_call(OCALL_PRINT_STRING, print_string_wrapper);
+  register_call(OCALL_SCAN_STRING, print_string_wrapper);
 
   edge_call_init_internals(
       (uintptr_t)enclave.getSharedBuffer(), enclave.getSharedBufferSize());
@@ -91,7 +96,7 @@ print_string_wrapper(void* buffer) {
   uintptr_t data_section = edge_call_data_ptr();
   memcpy((void*)data_section, &ret_val, sizeof(unsigned long));
   if (edge_call_setup_ret(
-          edge_call, (void*)72057593896660992, 0)) {
+          edge_call, (void*)72057593896374272, 0)) {
           //edge_call, (void*)data_section, sizeof(unsigned long))) {
     edge_call->return_data.call_status = CALL_STATUS_BAD_PTR;
     puts("edge_call_setup_ret BAD");

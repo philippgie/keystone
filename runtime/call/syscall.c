@@ -132,17 +132,17 @@ uintptr_t dispatch_edgecall_ocall( unsigned long call_id,
   printf("[dispatch_edgecall_syscall] return ptr: %p\n", return_ptr);
   printf("[dispatch_edgecall_syscall] return len: %zu\n", return_len);
 
-//  printf("******************************************\n");
-//  //return_ptr=0xffffffff40000000;
-//  for (unsigned int i = 0; i < return_len * 1; i+=64)
-//  {
-//    printf("\n%p: ", return_ptr+i);
-//    for (unsigned int j = i; j < i+64; j++)
-//    {
-//    printf("%c", ((char*)return_ptr)[j]);
-//    }
-//  }
-//  printf("******************************************\n");
+  //printf("******************************************\n");
+  ////return_ptr=0xffffffff40000000;
+  //for (unsigned int i = 0; i < return_len; i+=64)
+  //{
+  //  printf("\n%p: ", return_ptr+i);
+  //  for (unsigned int j = i; j < i+64 && j < return_len; j++)
+  //  {
+  //  printf("%c", ((char*)return_ptr)[j]);
+  //  }
+  //}
+  //printf("******************************************\n");
 
   copy_to_user(return_buffer, (void*)return_ptr, return_len);
 

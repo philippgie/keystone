@@ -133,6 +133,13 @@ pswap_encrypt(const void* addr, void* dst, uint64_t pageout_ctr) {
   uint8_t iv[32] = {0};
   WORD key_sched[80];
   aes_key_setup(pswap_boot_key, key_sched, 256);
+  printf("[ENCRYPTION_KEY]:")
+  for (size_t i = 0; i < 32; i++)
+  {
+    printf("%02x ", pswap_boot_key[i]);
+  }
+  printf("\n");
+  
 
   memcpy(iv + 8, &pageout_ctr, 8);
 

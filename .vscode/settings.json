@@ -12,6 +12,7 @@
         "variant": "cpp",
         "*.code": "cpp",
         "*.inc": "cpp",
-        "functional": "cpp"
+        "functional": "cpp",
+        "string.h": "c"
     }
 }
