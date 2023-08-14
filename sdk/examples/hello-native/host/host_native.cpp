@@ -12,7 +12,7 @@ print_string_wrapper(void* buffer);
 #define OCALL_PRINT_STRING 1
 #define OCALL_SCAN_STRING 2
 
-#define BUFSIZE 144
+#define BUFSIZE 142
 //#define BUFSIZE 118
 
 /***
