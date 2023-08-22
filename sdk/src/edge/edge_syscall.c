@@ -1,9 +1,16 @@
 #include "edge_syscall.h"
 
 #include <fcntl.h>
+#include <string.h>
+
+#include <errno.h>
+
 #include <stdio.h>
 #include <sys/epoll.h>
 #include <sys/select.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 #include <sys/sendfile.h>
 #include <sys/socket.h>
 #include <unistd.h>
@@ -126,10 +133,12 @@ incoming_syscall(struct edge_call* edge_call) {
     case (SYS_getpeername):;
       sargs_SYS_getpeername* getpeername_args =
           (sargs_SYS_getpeername*)syscall_info->data;
+            struct sockaddr_in *sin = (struct sockaddr_in *)&getpeername_args->addr;
+            printf("[io_syscall_getpeername]: addr: %s, port: %d\n", inet_ntoa(sin->sin_addr), ntohs(sin->sin_port));
       ret = getpeername(
           getpeername_args->sockfd, (struct sockaddr*)&getpeername_args->addr,
           &getpeername_args->addrlen);
-
+            printf("[io_syscall_getpeername]: addr: %s, port: %d\n", inet_ntoa(sin->sin_addr), ntohs(sin->sin_port));
       break;
     case (SYS_getsockname):;
       sargs_SYS_getsockname* getsockname_args =
