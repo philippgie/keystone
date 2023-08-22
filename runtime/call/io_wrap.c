@@ -399,13 +399,21 @@ uintptr_t io_syscall_getcwd(char* buf, size_t size){
   // char* syscall_ret = NULL;
 
   edge_syscall->syscall_num = SYS_getcwd;
+  args->size = size;
+
+
+  if(edge_call_check_ptr_valid((uintptr_t)args->buf, size) != 0){
+    goto done;
+  }
 
   size_t totalsize = (sizeof(struct edge_syscall) +
-                      sizeof(sargs_SYS_getcwd));
+                      sizeof(sargs_SYS_getcwd))+size;
 
   dispatch_edgecall_syscall(edge_syscall, totalsize);
 
   copy_to_user(buf, &args->buf, size);
+
+  done:
   print_strace("[runtime] proxied getcwd\r\n");
   return (uintptr_t) buf;
 }
