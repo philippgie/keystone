@@ -140,6 +140,12 @@ typedef struct sargs_SYS_getsockname{
   socklen_t addrlen;
 } sargs_SYS_getsockname;
 
+typedef struct sargs_SYS_connect{
+  int sockfd;
+  struct sockaddr_storage addr;
+  socklen_t addrlen;
+} sargs_SYS_connect;
+
 typedef struct sargs_SYS_renameat2{
   int olddirfd;
   char oldpath[128];

@@ -14,6 +14,7 @@ uintptr_t io_syscall_bind (int sockfd, uintptr_t addr, socklen_t addrlen);
 uintptr_t io_syscall_listen(int sockfd, int backlog);
 uintptr_t io_syscall_getpeername(int sockfd, uintptr_t addr, uintptr_t addrlen);
 uintptr_t io_syscall_getsockname(int sockfd, uintptr_t addr, uintptr_t addrlen);
+uintptr_t io_syscall_connect(int sockfd, uintptr_t addr, uintptr_t addrlen);
 uintptr_t io_syscall_accept(int sockfd, uintptr_t addr, uintptr_t addrlen);
 uintptr_t io_syscall_recvfrom(int sockfd, uintptr_t buf, size_t len, int flags,
                 				uintptr_t src_addr, uintptr_t addrlen);

@@ -310,6 +310,35 @@ uintptr_t io_syscall_getsockname(int sockfd, uintptr_t addr,
   return ret;
 }
 
+uintptr_t io_syscall_connect(int sockfd, uintptr_t addr,
+                       uintptr_t addrlen){
+  uintptr_t ret = -1;
+  struct edge_syscall* edge_syscall = (struct edge_syscall*)edge_call_data_ptr();
+  sargs_SYS_connect* args = (sargs_SYS_connect*) edge_syscall->data;
+
+  edge_syscall->syscall_num = SYS_connect;
+  args->sockfd = sockfd;
+
+	if(edge_call_check_ptr_valid((uintptr_t)&args->addrlen, sizeof(socklen_t)) != 0){
+		goto done;
+	}
+  copy_from_user(&args->addrlen, (void *) &addrlen, sizeof(socklen_t)); 
+	if(edge_call_check_ptr_valid((uintptr_t)&args->addr, args->addrlen) != 0){
+		goto done;
+	}
+  copy_from_user(&args->addr, (void*)addr, args->addrlen);  
+
+  size_t totalsize = (sizeof(struct edge_syscall)) + sizeof(sargs_SYS_connect);
+  ret = dispatch_edgecall_syscall(edge_syscall, totalsize);
+
+  copy_to_user((void *) addr, &args->addr, args->addrlen > addrlen ? addrlen : args->addrlen);
+  copy_to_user((void *) &addrlen, &args->addrlen, sizeof(socklen_t));
+
+  done:
+    print_strace("[runtime] proxied connect: fd: %d, ret: %d\r\n", args->sockfd, ret);
+    return ret;
+}
+
 uintptr_t io_syscall_getuid() {
   uintptr_t ret = -1; 
   struct edge_syscall* edge_syscall = (struct edge_syscall*)edge_call_data_ptr();

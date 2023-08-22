@@ -111,8 +111,14 @@ incoming_syscall(struct edge_call* edge_call) {
       sargs_SYS_getpeername *getpeername_args = (sargs_SYS_getpeername *) syscall_info->data;
       ret = getpeername(getpeername_args->sockfd, (struct sockaddr *) &getpeername_args->addr, 
                 &getpeername_args->addrlen);
-
-      break; 
+      break;
+    case (SYS_connect):;
+      sargs_SYS_connect* connect_args =
+          (sargs_SYS_connect*)syscall_info->data;
+      ret = connect(
+          connect_args->sockfd, (struct sockaddr*)&connect_args->addr,
+          connect_args->addrlen);
+      break;
     case (SYS_getsockname):; 
       sargs_SYS_getsockname *getsockname_args = (sargs_SYS_getsockname *) syscall_info->data;
       ret = getsockname(getsockname_args->sockfd, (struct sockaddr *) &getsockname_args->addr, 
