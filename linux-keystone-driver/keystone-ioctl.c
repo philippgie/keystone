@@ -75,12 +75,6 @@ int keystone_finalize_enclave(unsigned long arg)
   
   ret = sbi_sm_create_enclave(&create_args);
 
-  keystone_info("runtime_paddr %p\n", __va(create_args.runtime_paddr));
-  keystone_info("user_paddr %p\n", __va(create_args.user_paddr));
-  keystone_info("free_paddr %p\n", __va(create_args.free_paddr));
-  keystone_info("epm_paddr %p\n", __va(create_args.epm_region.paddr));
-  keystone_info("utm_paddr %p\n", __va(create_args.utm_region.paddr));
-
   if (ret.error) {
     keystone_err("keystone_create_enclave: SBI call failed with error code %ld\n", ret.error);
     goto error_destroy_enclave;

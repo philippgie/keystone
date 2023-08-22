@@ -21,10 +21,6 @@ int
 edge_call_get_ptr_from_offset(
     edge_data_offset offset, size_t data_len, uintptr_t* ptr) {
   // TODO double check these checks
-  printf("[edge_call_get_ptr_from_offset] data_len=%zu\n", data_len);
-  printf("[edge_call_get_ptr_from_offset] _shared_start=%zu\n", _shared_start);
-  printf("[edge_call_get_ptr_from_offset] _shared_len=%zu\n", _shared_len);
-  printf("[edge_call_get_ptr_from_offset] _shared_start + _shared_len=%zu\n", _shared_start + _shared_len);
 
   /* Validate that _shared_start+offset is sane */
   if (offset > UINTPTR_MAX - _shared_start || offset > _shared_len) {
@@ -45,11 +41,6 @@ edge_call_get_ptr_from_offset(
 int
 edge_call_check_ptr_valid(uintptr_t ptr, size_t data_len) {
   // TODO double check these checks
-  printf("[edge_call_check_ptr_valid] ptr=%zu\n", ptr);
-  printf("[edge_call_check_ptr_valid] data_len=%zu\n", data_len);
-  printf("[edge_call_check_ptr_valid] _shared_start=%zu\n", _shared_start);
-  printf("[edge_call_check_ptr_valid] _shared_len=%zu\n", _shared_len);
-  printf("[edge_call_check_ptr_valid] UINTPTR_MAX=%zu\n", UINTPTR_MAX);
 
   /* Validate that ptr starts in range */
   if (ptr > _shared_start + _shared_len || ptr < _shared_start) {
@@ -88,7 +79,6 @@ edge_call_args_ptr(struct edge_call* edge_call, uintptr_t* ptr, size_t* size) {
 int
 edge_call_ret_ptr(struct edge_call* edge_call, uintptr_t* ptr, size_t* size) {
   *size = edge_call->return_data.call_ret_size;
-  printf("[edge_call_ret_ptr] size=%zu\n", *size);
   return edge_call_get_ptr_from_offset(
       edge_call->return_data.call_ret_offset, *size, ptr);
 }
@@ -103,7 +93,6 @@ edge_call_setup_call(struct edge_call* edge_call, void* ptr, size_t size) {
 int
 edge_call_setup_ret(struct edge_call* edge_call, void* ptr, size_t size) {
   edge_call->return_data.call_ret_size = size;
-  printf("[edge_call_setup_ret] size=%zu\n", size);
   return edge_call_get_offset_from_ptr(
       (uintptr_t)ptr, size, &edge_call->return_data.call_ret_offset);
 }
@@ -127,7 +116,6 @@ edge_call_setup_wrapped_ret(
       sizeof(struct edge_data));
 
   edge_call->return_data.call_ret_size = sizeof(struct edge_data);
-  printf("[edge_call_setup_wrapped_ret] call_ret_size=%zu\n", edge_call->return_data.call_ret_size);
   return edge_call_get_offset_from_ptr(
       _shared_start + sizeof(struct edge_call), sizeof(struct edge_data),
       &edge_call->return_data.call_ret_offset);

@@ -69,7 +69,6 @@ Enclave::initStack(uintptr_t start, size_t size, bool is_rt) {
   uintptr_t va_start_stk = ROUND_DOWN((high_addr - size), PAGE_BITS);
   int stk_pages          = (high_addr - va_start_stk) / PAGE_SIZE;
 
-  printf("[initStack] stk_pages: %d\n", stk_pages);
   for (int i = 0; i < stk_pages; i++) {
     if (!pMemory->allocPage(
             va_start_stk, (uintptr_t)nullpage,
@@ -234,8 +233,6 @@ Enclave::prepareEnclave(uintptr_t alternatePhysAddr) {
   minPages = ROUND_UP(params.getFreeMemSize(), PAGE_BITS) / PAGE_SIZE;
   minPages += calculate_required_pages(
       enclaveFile->getTotalMemorySize(), runtimeFile->getTotalMemorySize());
-
-  printf("[prepareEnclave] minPages: %d", minPages);
 
   if (params.isSimulated()) {
     pMemory->init(0, 0, minPages);

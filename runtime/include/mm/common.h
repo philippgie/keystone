@@ -28,7 +28,7 @@
     sbi_exit_enclave(-1); \
   }
 
-#define USE_DEBUG 1
+//#define USE_DEBUG 1
 
 #ifdef USE_DEBUG
 #define debug(format, ...) \

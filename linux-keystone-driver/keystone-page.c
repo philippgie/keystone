@@ -71,7 +71,6 @@ int epm_init(struct epm* epm, unsigned int min_pages)
   epm->pa = __pa(epm_vaddr);
   epm->order = order;
   epm->size = count << PAGE_SHIFT;
-  keystone_info("epm->size: %d\n", epm->size);
   epm->ptr = epm_vaddr;
 
   return 0;

@@ -72,8 +72,6 @@ Memory::allocPage(uintptr_t va, uintptr_t src, unsigned int mode) {
   page_addr = *pFreeList >> PAGE_BITS;
   *pFreeList += PAGE_SIZE;
 
-  printf("[allocPage] va: %p, page_addr: %p, mode: %d\n", va, page_addr, mode);
-
   switch (mode) {
     case USER_NOEXEC: {
       *pte =
