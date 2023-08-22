@@ -361,6 +361,9 @@ void handle_syscall(struct encl_ctx* ctx)
   case(SYS_getsockname): 
     ret = io_syscall_getsockname((int) arg0,  (uintptr_t) arg1, (uintptr_t) arg2);
     break;
+  case(SYS_connect): 
+    ret = io_syscall_connect((int) arg0,  (uintptr_t) arg1, (uintptr_t) arg2);
+    break;
   case(SYS_getuid): 
     ret = io_syscall_getuid(); 
     break; 

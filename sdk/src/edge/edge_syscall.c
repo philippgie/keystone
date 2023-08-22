@@ -138,6 +138,13 @@ incoming_syscall(struct edge_call* edge_call) {
           getsockname_args->sockfd, (struct sockaddr*)&getsockname_args->addr,
           &getsockname_args->addrlen);
       break;
+    case (SYS_connect):;
+      sargs_SYS_connect* connect_args =
+          (sargs_SYS_connect*)syscall_info->data;
+      ret = connect(
+          connect_args->sockfd, (struct sockaddr*)&connect_args->addr,
+          connect_args->addrlen);
+      break;
     case (SYS_renameat2):;
       sargs_SYS_renameat2* renameat_args =
           (sargs_SYS_renameat2*)syscall_info->data;
