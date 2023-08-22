@@ -62,6 +62,8 @@ incoming_syscall(struct edge_call* edge_call) {
       break;
     case (SYS_getcwd):;  // TODO: how to handle string return
       sargs_SYS_getcwd* getcwd_args = (sargs_SYS_getcwd*)syscall_info->data;
+      printf("getcdw_args->buf: %p\n", getcwd_args->buf);
+      printf("getcdw_args->size: %zu\n", getcwd_args->size);
       retbuf     = getcwd(getcwd_args->buf, getcwd_args->size);
       is_str_ret = 1;
       break;
